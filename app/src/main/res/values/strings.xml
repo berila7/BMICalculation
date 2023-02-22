@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">DMICalc</string>
+    <string name="kg">Kg</string>
+    <string name="hieght">Hieght</string>
+    <string name="_0">0</string>
+    <string name="cm">Cm</string>
+    <string name="calculate">Calculate</string>
+    <string name="_01">0</string>
+    <string name="wieght">Wieght</string>
+</resources>
