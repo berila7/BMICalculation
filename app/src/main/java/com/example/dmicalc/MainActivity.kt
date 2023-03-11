@@ -2,41 +2,30 @@ package com.example.dmicalc
 
 import android.annotation.SuppressLint
 import android.content.SharedPreferences
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
-import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import com.example.dmicalc.databinding.ActivityMainBinding
+import com.google.android.material.snackbar.BaseTransientBottomBar.ANIMATION_MODE_SLIDE
+import com.google.android.material.snackbar.Snackbar
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var etWeight: EditText
-    private lateinit var etHeight: EditText
-    private lateinit var btnCalc: Button
-    private lateinit var resultRange: TextView
-    private lateinit var info: TextView
-    private lateinit var resultIndex: TextView
+
     private lateinit var sf: SharedPreferences
     private lateinit var editor: SharedPreferences.Editor
+    private lateinit var binding: ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-
-
-        etWeight = findViewById(R.id.etWeight)
-        etHeight = findViewById(R.id.etHeight)
-        btnCalc = findViewById(R.id.CalcBtn)
-        resultRange = findViewById(R.id.tvRange)
-        resultIndex = findViewById(R.id.tvIndex)
-        info = findViewById(R.id.tvInfo)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         sf = getSharedPreferences("my_sf", MODE_PRIVATE)
         editor = sf.edit()
 
-        btnCalc.setOnClickListener {
-            val weight = etWeight.text.toString()
-            val height = etHeight.text.toString()
+        binding.CalcBtn.setOnClickListener {
+            val weight = binding.etWeight.text.toString()
+            val height = binding.etHeight.text.toString()
             if (emptyField(weight, height)) {
                 val bmi = weight.toFloat() / ((height.toFloat() / 100) * (height.toFloat() / 100))
                 val formatedRange = String.format("%.2f", bmi).toFloat()
@@ -47,11 +36,15 @@ class MainActivity : AppCompatActivity() {
     private fun emptyField(weight: String?, height: String?): Boolean {
         return when {
             weight.isNullOrEmpty() -> {
-                Toast.makeText(this@MainActivity, "Weight is Empty", Toast.LENGTH_SHORT).show()
+                Snackbar.make(binding.root, "Weight is Empty", Snackbar.LENGTH_SHORT)
+                    .setAnimationMode(ANIMATION_MODE_SLIDE)
+                    .show()
                 return false
             }
             height.isNullOrEmpty() -> {
-                Toast.makeText(this@MainActivity, "Height is Empty", Toast.LENGTH_SHORT).show()
+                Snackbar.make(binding.root, "Height is Empty", Snackbar.LENGTH_SHORT)
+                    .setAnimationMode(ANIMATION_MODE_SLIDE)
+                    .show()
                 return false
             }
             else -> {
@@ -64,51 +57,51 @@ class MainActivity : AppCompatActivity() {
     private fun showResult(bmi: Float) {
         val resultInfo = "Normal range is 18.5 - 24.9"
 
-        resultIndex.text = bmi.toString()
-        info.text = resultInfo
+        binding.tvIndex.text = bmi.toString()
+        binding.tvInfo.text = resultInfo
 
-        var color = 0
+        val color: Int
 
         when {
             bmi < 16.0 -> {
-                resultRange.text = "Underweight(Severe thinness)"
-                color = R.color.underweight
+                binding.tvRange.text = "Underweight(Severe thinness)"
+                color = R.color.md_theme_light_error
             }
             bmi in 15.9..16.9 -> {
-                resultRange.text = "Underweight(Moderate thinness)"
-                color = R.color.underweight
+                binding.tvRange.text = "Underweight(Moderate thinness)"
+                color = R.color.md_theme_light_error
             }
             bmi in 17.0..18.4 -> {
-                resultRange.text = "Underweight(Mild thinness)"
-                color = R.color.underweight
+                binding.tvRange.text = "Underweight(Mild thinness)"
+                color = R.color.md_theme_light_error
             }
             bmi in 18.5..24.9 -> {
-                resultRange.text = "Normal range"
-                color = R.color.normal_weight
+                binding.tvRange.text = "Normal range"
+                color = R.color.md_theme_light_primary
             }
             bmi in 25.0..29.9 -> {
-                resultRange.text = "Overweight (Pre-obese)"
-                color = R.color.over_weight
+                binding.tvRange.text = "Overweight (Pre-obese)"
+                color = R.color.md_theme_light_error
             }
             bmi in 30.0..34.9 -> {
-                resultRange.text = "Obese (Class I)"
-                color = R.color.obese
+                binding.tvRange.text = "Obese (Class I)"
+                color = R.color.md_theme_light_error
             }
             bmi in 35.0..39.9 -> {
-                resultRange.text = "Obese (Class II)"
-                color = R.color.obese
+                binding.tvRange.text = "Obese (Class II)"
+                color = R.color.md_theme_light_error
 
             }
             bmi in 40.0..50.0 -> {
-                resultRange.text = "Obese (Class III)"
-                color = R.color.obese
+                binding.tvRange.text = "Obese (Class III)"
+                color = R.color.md_theme_light_error
 
             }
             else -> {
-                resultRange.text = "Calm Down"
-                color = R.color.obese
+                binding.tvRange.text = "Calm Down"
+                color = R.color.md_theme_light_error
             }
         }
-        resultRange.setTextColor(ContextCompat.getColor(this, color))
+        binding.tvRange.setTextColor(ContextCompat.getColor(this, color))
     }
 }

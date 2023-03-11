@@ -7,4 +7,5 @@
     <string name="calculate">Calculate</string>
     <string name="_01">0</string>
     <string name="wieght">Wieght</string>
+    <string name="bmi_calculator">BMI Calculator</string>
 </resources>
